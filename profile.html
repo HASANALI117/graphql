@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="profile-container">
+    <div class="profile-header">
+      <h1>My Profile</h1>
+      <button id="logout-button">Logout</button>
+    </div>
+    
+    <div id="profile-info"></div>
+    
+    <div class="graphs-container">
+      <div class="graph-card">
+        <h2>XP Progression</h2>
+        <svg id="xp-graph"></svg>
+      </div>
+      <div class="graph-card">
+        <h2>Audit Ratio</h2>
+        <svg id="audit-graph"></svg>
+      </div>
+      <div class="graph-card">
+        <h2>Group Participation</h2>
+        <svg id="group-graph"></svg>
+      </div>
+    </div>
+  </div>
+  
+  <div class="tooltip"></div>
+  <script src="profile.js"></script>
+</body>
+</html>
