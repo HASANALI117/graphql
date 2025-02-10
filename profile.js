@@ -84,9 +84,9 @@ const fetchProfileData = async () => {
 
 const formatNumber = (num) => {
   if (num >= 1e6) {
-    return (num / 1e6).toFixed(1) + "MB";
+    return (num / 1e6).toFixed(1) + " MB";
   } else if (num >= 1e3) {
-    return (num / 1e3).toFixed(1) + "KB";
+    return (num / 1e3).toFixed(1) + " KB";
   } else {
     return num;
   }

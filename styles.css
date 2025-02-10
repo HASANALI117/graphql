@@ -1,113 +1,26 @@
-:root {
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --background: #f8fafc;
-  --card-background: #ffffff;
-  --text: #1e293b;
-  --text-light: #64748b;
-  --border: #e2e8f0;
-  --success: #16a34a;
-  --error: #dc2626;
+.waves {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
 }
 
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: var(--background);
-  color: var(--text);
-  margin: 0;
-  padding: 2rem;
+.blob {
+  position: fixed;
+  width: 50%;
+  height: 100vh;
+  z-index: -1;
 }
 
-.profile-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  background: var(--card-background);
+.card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
   border-radius: 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
 }
 
-.profile-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-}
-
-.profile-header h1 {
-  margin: 0;
-  font-size: 2rem;
-  color: var(--primary);
-}
-
-#logout-button {
-  background: var(--primary);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background 0.2s;
-}
-
-#logout-button:hover {
-  background: var(--primary-hover);
-}
-
-.profile-info {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.profile-info-card {
-  background: var(--background);
-  padding: 1.5rem;
-  border-radius: 0.75rem;
-  border: 1px solid var(--border);
-}
-
-.profile-info-card h3 {
-  margin: 0 0 0.5rem;
-  font-size: 1rem;
-  color: var(--text-light);
-}
-
-.profile-info-card p {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 500;
-}
-
-.graphs-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-.graph-card {
-  background: var(--background);
-  padding: 1.5rem;
-  border-radius: 0.75rem;
-  border: 1px solid var(--border);
-}
-
-.graph-card h2 {
-  margin: 0 0 1rem;
-  font-size: 1.25rem;
-  color: var(--text-light);
-}
-
-.tooltip {
-  position: absolute;
-  background: var(--card-background);
-  border: 1px solid var(--border);
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-  pointer-events: none;
-  font-size: 0.875rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.input-field {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
 }

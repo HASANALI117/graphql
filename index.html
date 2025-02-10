@@ -1,21 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <div class="login-container">
-    <h1>Login</h1>
-    <form id="login-form">
-      <input type="text" id="username" placeholder="Username or Email" required>
-      <input type="password" id="password" placeholder="Password" required>
-      <button type="submit">Login</button>
-    </form>
-    <p id="error-message" class="error"></p>
-  </div>
-  <script src="script.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/kute.js@2.1.2/dist/kute.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="m-0 min-h-screen">
+    <div>
+      <svg
+        id="wave"
+        viewBox="0 0 900 600"
+        class="waves"
+        preserveAspectRatio="xMidYMid slice"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        version="1.1"
+      >
+        <rect x="0" y="0" width="900" height="600" fill="#001220"></rect>
+        <path
+          d="M557 600L556.8 585.7C556.7 571.3 556.3 542.7 572.2 514.2C588 485.7 620 457.3 623.7 428.8C627.3 400.3 602.7 371.7 595.8 343C589 314.3 600 285.7 597.3 257C594.7 228.3 578.3 199.7 572.3 171.2C566.3 142.7 570.7 114.3 574.3 85.8C578 57.3 581 28.7 582.5 14.3L584 0L900 0L900 14.3C900 28.7 900 57.3 900 85.8C900 114.3 900 142.7 900 171.2C900 199.7 900 228.3 900 257C900 285.7 900 314.3 900 343C900 371.7 900 400.3 900 428.8C900 457.3 900 485.7 900 514.2C900 542.7 900 571.3 900 585.7L900 600Z"
+          fill="#c62368"
+        ></path>
+        <path
+          d="M666 600L660.3 585.7C654.7 571.3 643.3 542.7 640.2 514.2C637 485.7 642 457.3 643.3 428.8C644.7 400.3 642.3 371.7 641.8 343C641.3 314.3 642.7 285.7 638.7 257C634.7 228.3 625.3 199.7 630.8 171.2C636.3 142.7 656.7 114.3 655.8 85.8C655 57.3 633 28.7 622 14.3L611 0L900 0L900 14.3C900 28.7 900 57.3 900 85.8C900 114.3 900 142.7 900 171.2C900 199.7 900 228.3 900 257C900 285.7 900 314.3 900 343C900 371.7 900 400.3 900 428.8C900 457.3 900 485.7 900 514.2C900 542.7 900 571.3 900 585.7L900 600Z"
+          fill="#d53867"
+        ></path>
+        <path
+          d="M768 600L750.3 585.7C732.7 571.3 697.3 542.7 696.3 514.2C695.3 485.7 728.7 457.3 743.7 428.8C758.7 400.3 755.3 371.7 744 343C732.7 314.3 713.3 285.7 710.2 257C707 228.3 720 199.7 714.3 171.2C708.7 142.7 684.3 114.3 674.5 85.8C664.7 57.3 669.3 28.7 671.7 14.3L674 0L900 0L900 14.3C900 28.7 900 57.3 900 85.8C900 114.3 900 142.7 900 171.2C900 199.7 900 228.3 900 257C900 285.7 900 314.3 900 343C900 371.7 900 400.3 900 428.8C900 457.3 900 485.7 900 514.2C900 542.7 900 571.3 900 585.7L900 600Z"
+          fill="#e34c67"
+        ></path>
+        <path
+          d="M775 600L775.5 585.7C776 571.3 777 542.7 773 514.2C769 485.7 760 457.3 757.7 428.8C755.3 400.3 759.7 371.7 757.2 343C754.7 314.3 745.3 285.7 743.3 257C741.3 228.3 746.7 199.7 752.3 171.2C758 142.7 764 114.3 767.2 85.8C770.3 57.3 770.7 28.7 770.8 14.3L771 0L900 0L900 14.3C900 28.7 900 57.3 900 85.8C900 114.3 900 142.7 900 171.2C900 199.7 900 228.3 900 257C900 285.7 900 314.3 900 343C900 371.7 900 400.3 900 428.8C900 457.3 900 485.7 900 514.2C900 542.7 900 571.3 900 585.7L900 600Z"
+          fill="#ef5f67"
+        ></path>
+        <path
+          d="M848 600L843 585.7C838 571.3 828 542.7 818.3 514.2C808.7 485.7 799.3 457.3 803.8 428.8C808.3 400.3 826.7 371.7 835.5 343C844.3 314.3 843.7 285.7 839 257C834.3 228.3 825.7 199.7 825.3 171.2C825 142.7 833 114.3 832.8 85.8C832.7 57.3 824.3 28.7 820.2 14.3L816 0L900 0L900 14.3C900 28.7 900 57.3 900 85.8C900 114.3 900 142.7 900 171.2C900 199.7 900 228.3 900 257C900 285.7 900 314.3 900 343C900 371.7 900 400.3 900 428.8C900 457.3 900 485.7 900 514.2C900 542.7 900 571.3 900 585.7L900 600Z"
+          fill="#fa7268"
+        ></path>
+      </svg>
+
+      <svg
+        id="blob"
+        viewBox="0 0 900 600"
+        class="blob"
+        preserveAspectRatio="xMidYMid slice"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        version="1.1"
+      >
+        <g transform="translate(424.0395751359287 312.54452421788926)">
+          <path
+            id="blob1"
+            d="M123.5 -111.4C173.5 -73.5 236.8 -36.8 243.1 6.4C249.5 49.5 199 99 149 124C99 149 49.5 149.5 -9.1 158.6C-67.6 167.7 -135.3 185.3 -166.8 160.3C-198.3 135.3 -193.6 67.6 -186.6 7.1C-179.5 -53.5 -170 -107 -138.5 -144.8C-107 -182.7 -53.5 -204.8 -8.4 -196.5C36.8 -188.1 73.5 -149.2 123.5 -111.4"
+            fill="#BB004B"
+          ></path>
+        </g>
+
+        <g
+          transform="translate(416.7896782001163 324.7087583845056)"
+          style="visibility: hidden"
+        >
+          <path
+            id="blob2"
+            d="M175.8 -170.1C223.8 -127.8 255.9 -63.9 259.3 3.4C262.7 70.7 237.4 141.4 189.4 166.4C141.4 191.4 70.7 170.7 17.3 153.4C-36.1 136.1 -72.1 122.1 -109.5 97.1C-146.8 72.1 -185.4 36.1 -192.1 -6.7C-198.8 -49.5 -173.7 -99 -136.3 -141.3C-99 -183.7 -49.5 -218.8 7.2 -226C63.9 -233.2 127.8 -212.4 175.8 -170.1"
+            fill="#BB004B"
+          ></path>
+        </g>
+
+        <g
+          transform="translate(473.36018018110275 299.2978115831037)"
+          style="visibility: hidden"
+        >
+          <path
+            id="blob3"
+            d="M105.2 -107.7C139.7 -70.7 173.4 -35.4 191 17.7C208.7 70.7 210.4 141.4 175.9 170.1C141.4 198.8 70.7 185.4 1.4 184C-67.9 182.5 -135.8 193.1 -183.8 164.4C-231.8 135.8 -259.9 67.9 -246.9 13C-234 -42 -179.9 -83.9 -131.9 -120.9C-83.9 -157.9 -42 -190 -3.3 -186.7C35.4 -183.4 70.7 -144.7 105.2 -107.7"
+            fill="#BB004B"
+          ></path>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Login Form -->
+    <div
+      class="container mx-auto px-4 min-h-screen flex items-center justify-center"
+    >
+      <div class="w-full max-w-md">
+        <div class="card p-8 space-y-6">
+          <div class="text-center">
+            <h1 class="text-3xl font-bold text-white mb-2">Welcome Back</h1>
+            <p class="text-purple-300">Please sign in to continue</p>
+          </div>
+
+          <form class="space-y-6" id="login-form">
+            <div>
+              <label class="block text-white/80 text-sm mb-2" for="email">
+                Username
+              </label>
+              <input
+                id="username"
+                type="text"
+                class="input-field w-full px-4 py-3 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="Enter your username"
+              />
+            </div>
+
+            <div>
+              <label class="block text-white/80 text-sm mb-2" for="password">
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                class="input-field w-full px-4 py-3 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="Enter your password"
+              />
+            </div>
+
+            <button
+              type="submit"
+              class="w-full bg-[#c62368] hover:bg-[#d53867] text-white py-3 px-4 rounded-lg transition-all duration-200"
+            >
+              Sign In
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script>
+      // Animate blob1 -> blob2 -> blob3 -> blob1 in a loop
+      const tween1 = KUTE.fromTo(
+        "#blob1",
+        { path: "#blob1" },
+        { path: "#blob2" },
+        { duration: 3000 }
+      );
+      const tween2 = KUTE.fromTo(
+        "#blob1",
+        { path: "#blob2" },
+        { path: "#blob3" },
+        { duration: 3000 }
+      );
+      const tween3 = KUTE.fromTo(
+        "#blob1",
+        { path: "#blob3" },
+        { path: "#blob1" },
+        { duration: 3000 }
+      );
+
+      tween1.chain(tween2);
+      tween2.chain(tween3);
+      tween3.chain(tween1);
+
+      tween1.start();
+    </script>
+    <script src="script.js"></script>
+  </body>
 </html>
