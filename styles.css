@@ -24,3 +24,42 @@
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(5px);
 }
+
+/* Custom Scrollbar Styling */
+#projects-map::-webkit-scrollbar {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+#projects-map::-webkit-scrollbar-thumb {
+  background: #c62368;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+#projects-map::-webkit-scrollbar-thumb:hover {
+  background: #d53867;
+  transform: scaleY(1.1);
+}
+
+#projects-map::-webkit-scrollbar-track {
+  background: rgba(0, 18, 32, 0.4);
+  border-radius: 4px;
+}
+
+/* Firefox Support */
+#projects-map {
+  scrollbar-color: #c62368 rgba(0, 18, 32, 0.4);
+  scrollbar-width: thin;
+}
+
+/* Optional: Add subtle gradient to scrollbar track */
+#projects-map::-webkit-scrollbar-track-piece {
+  background: linear-gradient(
+    to right,
+    rgba(198, 35, 104, 0.1) 0%,
+    rgba(0, 18, 32, 0.4) 50%,
+    rgba(198, 35, 104, 0.1) 100%
+  );
+}

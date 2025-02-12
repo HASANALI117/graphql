@@ -6,6 +6,11 @@
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/kute.js@2.1.2/dist/kute.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <link rel="stylesheet" href="styles.css" />
 
@@ -303,7 +308,7 @@
       </div>
 
       <!-- Piscine Stats -->
-      <div class="card p-6 mt-6">
+      <!-- <div class="card p-6 mt-6">
         <h3 class="text-xl font-bold mb-4 text-white">Piscine Stats</h3>
         <div class="grid md:grid-cols-2 gap-4">
           <div>
@@ -325,6 +330,12 @@
             </div>
           </div>
         </div>
+      </div> -->
+
+      <!-- Projects Map -->
+      <div class="card p-6 mt-6">
+        <h3 class="text-xl font-bold mb-4 text-white">Completed Projects</h3>
+        <div id="projects-map" class="flex overflow-x-auto gap-4 pb-4"></div>
       </div>
     </div>
 

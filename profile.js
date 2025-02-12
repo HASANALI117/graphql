@@ -46,6 +46,20 @@ const fetchProfileData = async () => {
       ) {
         type
       }
+      projects: transaction(
+          where: {
+            type: {_eq: "xp"},
+            object: {type: {_eq: "project"}}
+          },
+          order_by: {createdAt: asc}
+        ) {
+          amount
+          createdAt
+          object {
+            name
+            attrs
+          }
+      }
     }
   `;
 
@@ -83,7 +97,9 @@ const displayProfile = (data) => {
   const user = data.user[0];
   const level = data.level[0].amount;
   const xp = data.xp.aggregate.sum.amount;
+  const projects = data.projects;
 
+  console.log(projects);
   // console.log(xp);
   // console.log({ user });
   // console.log(data.skills);
@@ -176,6 +192,7 @@ const displayProfile = (data) => {
 `;
 
   // createXpOverTimeGraph(data.transaction);
+  renderProjectsMap(projects);
 };
 
 // const createXpOverTimeGraph = (transactions) => {
@@ -281,6 +298,30 @@ const displayProfile = (data) => {
 //     .attr("fill", "none")
 //     .attr("pointer-events", "all");
 // };
+
+const renderProjectsMap = (projects) => {
+  const container = document.getElementById("projects-map");
+  container.innerHTML = projects
+    .map(
+      (project) => `
+      <div class="flex-shrink-0 w-48 p-4 bg-white/10 rounded-lg text-center hover:bg-white/20 transition-all">
+        <h4 class="font-bold text-white mb-2">${project.object.name}</h4>
+        <div class="text-purple-300 text-sm">
+          +${project.amount} XP
+        </div>
+        <div class="text-xs text-white/60 mt-2">
+          ${new Date(project.createdAt).toLocaleDateString()}
+        </div>
+        <div class="mt-2">
+          <span class="px-2 py-1 bg-[#c62368] rounded-full text-xs text-white">
+            ${project.object.attrs.language}
+          </span>
+        </div>
+      </div>
+    `
+    )
+    .join("");
+};
 
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("logout-button").addEventListener("click", () => {
