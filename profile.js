@@ -104,18 +104,14 @@ const displayProfile = (data) => {
   // console.log({ user });
   // console.log(data.skills);
 
-  const leftCol = document.getElementById("left-col");
+  const leftColumn = document.getElementById("left-col");
+  const midColumn = document.getElementById("mid-col");
+  const rightColumn = document.getElementById("right-col");
   const skills = document.getElementById("skills");
-  const midColumn = document.getElementById("midColumn");
   const coreStats = document.getElementById("coreStats");
 
-  leftCol.innerHTML = `<h1 class="text-3xl font-bold mb-2 text-white">${user.firstName} ${user.lastName}</h1>
-            <p class="text-purple-300">@${user.login} #${user.id}</p>
-            <div class="mt-4">
-              <span class="bg-white/20 px-3 py-1 rounded-full text-white"
-                >Level ${level}</span
-              >
-            </div>`;
+  leftColumn.innerHTML = `<h1 class="text-3xl font-bold mb-2 text-white">${user.firstName} ${user.lastName}</h1>
+            <p class="text-purple-300">@${user.login} #${user.id}</p>`;
 
   midColumn.innerHTML = `
   <p class="text-white/80">
@@ -134,10 +130,18 @@ const displayProfile = (data) => {
   </p>
   `;
 
+  rightColumn.innerHTML = `
+  <h1 class="text-4xl font-bold mb-2 self-center">
+    <div class="level-badge">
+      <span>Level ${level}</span>
+    </div>
+  </h1>
+`;
+
   const skillElements = data.skills
     .map((skill) => {
       const skillType = skill.type.replace("skill_", "");
-      return `<span class="px-3 py-1 bg-[#AA5486] rounded-full text-white">${skillType}</span>`;
+      return `<span class="skill-badge px-3 py-1 rounded-full text-white">${skillType}</span>`;
     })
     .join(" ");
 
@@ -307,7 +311,7 @@ const renderProjectsMap = (projects) => {
       <div class="flex-shrink-0 w-48 p-4 bg-white/10 rounded-lg text-center hover:bg-white/20 transition-all">
         <h4 class="font-bold text-white mb-2">${project.object.name}</h4>
         <div class="text-purple-300 text-sm">
-          +${project.amount} XP
+          +${formatNumber(project.amount)}
         </div>
         <div class="text-xs text-white/60 mt-2">
           ${new Date(project.createdAt).toLocaleDateString()}

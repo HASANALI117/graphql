@@ -54,7 +54,6 @@
   scrollbar-width: thin;
 }
 
-/* Optional: Add subtle gradient to scrollbar track */
 #projects-map::-webkit-scrollbar-track-piece {
   background: linear-gradient(
     to right,
@@ -62,4 +61,108 @@
     rgba(0, 18, 32, 0.4) 50%,
     rgba(198, 35, 104, 0.1) 100%
   );
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap");
+
+.level-badge {
+  position: relative;
+  font-family: "Poppins", sans-serif;
+  color: white !important;
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.level-badge::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    #c62368,
+    #d53867,
+    #e34c67,
+    #ef5f67,
+    #fa7268,
+    #ef5f67,
+    #e34c67,
+    #d53867,
+    #c62368
+  );
+  animation: rotate 4s linear infinite;
+  z-index: -1;
+}
+
+.level-badge::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  background: rgba(0, 18, 32, 0.9);
+  border-radius: 0.5rem;
+  z-index: -1;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Add shine effect */
+.level-badge span {
+  position: relative;
+  z-index: 2;
+}
+
+.level-badge span::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 25%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 75%
+  );
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  from {
+    transform: translateX(-50%) translateY(-50%) rotate(45deg);
+  }
+  to {
+    transform: translateX(50%) translateY(50%) rotate(45deg);
+  }
+}
+
+/* skill badges */
+.skill-badge {
+  background: rgba(92, 6, 42, 0.4);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(198, 35, 104, 0.4);
+  box-shadow: 0 2px 8px rgba(0, 18, 32, 0.2);
+  transition: all 0.3s ease;
+}
+
+.skill-badge:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(198, 35, 104, 0.35) 0%,
+    rgba(133, 25, 70, 0.35) 100%
+  );
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(198, 35, 104, 0.3);
+  cursor: default;
 }
