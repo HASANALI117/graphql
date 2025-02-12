@@ -23,11 +23,18 @@ const fetchProfileData = async () => {
           totalUp
           totalDown
       }
-      transaction(where: { type: { _eq: "xp" } }, order_by: { createdAt: asc }) {
+      transaction(
+        where: {type: {_eq: "xp"}, object: {type: {_eq: "project"}}}
+        order_by: {createdAt: asc}
+      ) {
+        id
+        type
         amount
         createdAt
-        type
-        objectId
+        object {
+          id
+          name
+        }
       }
       progress {
         grade
@@ -84,9 +91,9 @@ const fetchProfileData = async () => {
 
 const formatNumber = (num) => {
   if (num >= 1e6) {
-    return (num / 1e6).toFixed(1) + " MB";
+    return (num / 1e6).toFixed(2) + " MB";
   } else if (num >= 1e3) {
-    return (num / 1e3).toFixed(1) + " KB";
+    return (num / 1e3).toFixed(2) + " kB";
   } else {
     return num;
   }
@@ -95,6 +102,7 @@ const formatNumber = (num) => {
 const displayProfile = (data) => {
   const user = data.user[0];
   console.log({ user });
+  console.log(data.transaction);
 
   const username = document.getElementById("username");
   const fullName = document.getElementById("fullName");
@@ -140,9 +148,23 @@ const displayProfile = (data) => {
     ).toLocaleDateString()}
   </p>
   `;
+
+  // Calculate total XP from transactions
+  const totalXP = data.transaction.reduce(
+    (sum, transaction) => sum + Number(transaction.amount),
+    0
+  );
+
+  // Correct formatting function (1 KB = 1024 B)
+  const formatXP = (xp) => {
+    if (xp >= 1048576) return `${(xp / 1048576).toFixed(1)} MB`; // 1024*1024
+    if (xp >= 1024) return `${(xp / 1024).toFixed(1)} kB`;
+    return `${xp} B`;
+  };
+
   coreStats.innerHTML = `
   <div class="text-center">
-    <div class="text-3xl font-bold text-purple-300">cds</div>
+    <div class="text-3xl font-bold text-purple-300">${formatXP(totalXP)}</div>
     <div class="text-sm text-white/80">Total XP</div>
   </div>
   <div class="text-center">
@@ -156,6 +178,112 @@ const displayProfile = (data) => {
     <div class="text-sm text-white/80">Audit Ratio</div>
   </div>
 `;
+
+  createXpOverTimeGraph(data.transaction);
+};
+
+const createXpOverTimeGraph = (transactions) => {
+  const svg = d3.select("#xp-progress");
+  svg.selectAll("*").remove();
+
+  // Parse and sort transactions
+  const parsedData = transactions
+    .map((t) => ({
+      date: new Date(t.createdAt),
+      createdAt: t.createdAt,
+      amount: Number(t.amount),
+      cumulativeXp: 0,
+    }))
+    .sort((a, b) => a.date - b.date);
+
+  // Calculate cumulative XP
+  let cumulative = 0;
+  parsedData.forEach((d) => {
+    cumulative += d.amount;
+    d.cumulativeXp = cumulative;
+  });
+
+  // Set up dimensions
+  const width = 400;
+  const height = 200;
+  const margin = { top: 20, right: 20, bottom: 20, left: 20 };
+
+  // Create scales
+  const xScale = d3
+    .scaleTime()
+    .domain(d3.extent(parsedData, (d) => d.date))
+    .range([margin.left, width - margin.right]);
+
+  const yScale = d3
+    .scaleLinear()
+    .domain([0, d3.max(parsedData, (d) => d.cumulativeXp)])
+    .nice()
+    .range([height - margin.bottom, margin.top]);
+
+  // Create line generator
+  const line = d3
+    .line()
+    .x((d) => xScale(d.date))
+    .y((d) => yScale(d.cumulativeXp))
+    .curve(d3.curveMonotoneX);
+
+  // Draw line
+  svg
+    .append("path")
+    .datum(parsedData)
+    .attr("fill", "none")
+    .attr("stroke", "#c62368")
+    .attr("stroke-width", 2)
+    .attr("d", line);
+
+  // Create tooltip
+  const tooltip = d3
+    .select("body")
+    .append("div")
+    .style("position", "absolute")
+    .style("padding", "8px")
+    .style("background", "rgba(255, 255, 255, 0.1)")
+    .style("backdrop-filter", "blur(10px)")
+    .style("border-radius", "4px")
+    .style("color", "white")
+    .style("font-size", "12px")
+    .style("pointer-events", "none")
+    .style("opacity", 0);
+
+  // Add interactive circles
+  svg
+    .selectAll("circle")
+    .data(parsedData)
+    .enter()
+    .append("circle")
+    .attr("cx", (d) => xScale(d.date))
+    .attr("cy", (d) => yScale(d.cumulativeXp))
+    .attr("r", 3)
+    .attr("fill", "#fff")
+    .on("mouseover", (event, d) => {
+      tooltip.transition().duration(200).style("opacity", 1);
+      tooltip
+        .html(
+          `
+        ${new Date(d.createdAt).toLocaleString()}<br>
+        XP: ${d.amount}<br>
+        Total: ${d.cumulativeXp}
+      `
+        )
+        .style("left", event.pageX + 10 + "px")
+        .style("top", event.pageY - 28 + "px");
+    })
+    .on("mouseout", () => {
+      tooltip.transition().duration(500).style("opacity", 0);
+    });
+
+  // Remove axis elements
+  svg
+    .append("rect")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("fill", "none")
+    .attr("pointer-events", "all");
 };
 
 document.addEventListener("DOMContentLoaded", () => {
