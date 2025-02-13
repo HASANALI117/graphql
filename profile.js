@@ -3,11 +3,6 @@ if (!jwt) {
   window.location.href = "index.html";
 }
 
-// Load D3.js from CDN
-const script = document.createElement("script");
-script.src = "https://d3js.org/d3.v7.min.js";
-document.head.appendChild(script);
-
 const fetchProfileData = async () => {
   const query = `
     {
@@ -32,6 +27,18 @@ const fetchProfileData = async () => {
             amount
           }
         }
+      }
+      progress: transaction(
+        where: {type: {_eq: "xp"}, eventId: {_eq: 20}}
+        order_by: {createdAt: asc}
+      ) {
+        amount
+        object {
+          name
+          type
+          createdAt
+        }
+        type
       }
       level: transaction(
         limit: 1
@@ -210,8 +217,8 @@ const displayProfile = (data) => {
   </div>
 `;
 
-  createXpByProjectGraph(projects);
   renderProjectsMap(projects);
+  createXpByProjectGraph(projects);
 
   const logoutBtn = document.getElementById("logout-button");
   if (logoutBtn) {
