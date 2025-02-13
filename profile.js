@@ -92,6 +92,15 @@ const formatNumber = (num) => {
     return num;
   }
 };
+const formatNumber2 = (num) => {
+  if (num >= 1e6) {
+    return Math.round(num / 1e6) + " MB";
+  } else if (num >= 1e3) {
+    return Math.round(num / 1e3) + " kB";
+  } else {
+    return num;
+  }
+};
 
 const displayProfile = (data) => {
   const user = data.user[0];
@@ -201,7 +210,7 @@ const displayProfile = (data) => {
   </div>
 `;
 
-  // createXpOverTimeGraph(data.transaction);
+  createXpByProjectGraph(projects);
   renderProjectsMap(projects);
 
   const logoutBtn = document.getElementById("logout-button");
@@ -213,109 +222,159 @@ const displayProfile = (data) => {
   }
 };
 
-// const createXpOverTimeGraph = (transactions) => {
-//   const svg = d3.select("#xp-progress");
-//   svg.selectAll("*").remove();
+const createXpByProjectGraph = (projects) => {
+  // Sort projects by creation date and calculate cumulative XP
+  const sortedProjects = [...projects].sort(
+    (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+  );
 
-//   // Parse and sort transactions
-//   const parsedData = transactions
-//     .map((t) => ({
-//       date: new Date(t.createdAt),
-//       createdAt: t.createdAt,
-//       amount: Number(t.amount),
-//       cumulativeXp: 0,
-//     }))
-//     .sort((a, b) => a.date - b.date);
+  let cumulativeXP = 0;
+  const cumulativeData = sortedProjects.map((project) => {
+    cumulativeXP += project.amount;
+    return {
+      ...project,
+      cumulativeXP,
+    };
+  });
 
-//   // Calculate cumulative XP
-//   let cumulative = 0;
-//   parsedData.forEach((d) => {
-//     cumulative += d.amount;
-//     d.cumulativeXp = cumulative;
-//   });
+  const svg = d3.select("#xp-progress");
+  svg.selectAll("*").remove();
 
-//   // Set up dimensions
-//   const width = 400;
-//   const height = 200;
-//   const margin = { top: 20, right: 20, bottom: 20, left: 20 };
+  // Set up dimensions
+  const width = 400;
+  const height = 200;
+  const margin = { top: 20, right: 30, bottom: 30, left: 40 };
+  const innerWidth = width - margin.left - margin.right;
+  const innerHeight = height - margin.top - margin.bottom;
 
-//   // Create scales
-//   const xScale = d3
-//     .scaleTime()
-//     .domain(d3.extent(parsedData, (d) => d.date))
-//     .range([margin.left, width - margin.right]);
+  // Create scales
+  const x = d3
+    .scalePoint()
+    .domain(cumulativeData.map((d) => d.object.name))
+    .range([0, innerWidth]);
 
-//   const yScale = d3
-//     .scaleLinear()
-//     .domain([0, d3.max(parsedData, (d) => d.cumulativeXp)])
-//     .nice()
-//     .range([height - margin.bottom, margin.top]);
+  const y = d3
+    .scaleLinear()
+    .domain([0, d3.max(cumulativeData, (d) => d.cumulativeXP)])
+    .range([innerHeight, 0]);
 
-//   // Create line generator
-//   const line = d3
-//     .line()
-//     .x((d) => xScale(d.date))
-//     .y((d) => yScale(d.cumulativeXp))
-//     .curve(d3.curveMonotoneX);
+  // Create the line generator
+  const line = d3
+    .line()
+    .x((d) => x(d.object.name))
+    .y((d) => y(d.cumulativeXP))
+    .curve(d3.curveMonotoneX);
 
-//   // Draw line
-//   svg
-//     .append("path")
-//     .datum(parsedData)
-//     .attr("fill", "none")
-//     .attr("stroke", "#c62368")
-//     .attr("stroke-width", 2)
-//     .attr("d", line);
+  // Create gradient
+  const gradient = svg
+    .append("defs")
+    .append("linearGradient")
+    .attr("id", "lineGradient")
+    .attr("x1", "0%")
+    .attr("y1", "0%")
+    .attr("x2", "100%")
+    .attr("y2", "0%");
 
-//   // Create tooltip
-//   const tooltip = d3
-//     .select("body")
-//     .append("div")
-//     .style("position", "absolute")
-//     .style("padding", "8px")
-//     .style("background", "rgba(255, 255, 255, 0.1)")
-//     .style("backdrop-filter", "blur(10px)")
-//     .style("border-radius", "4px")
-//     .style("color", "white")
-//     .style("font-size", "12px")
-//     .style("pointer-events", "none")
-//     .style("opacity", 0);
+  gradient.append("stop").attr("offset", "0%").style("stop-color", "#c62368");
+  gradient.append("stop").attr("offset", "100%").style("stop-color", "#fa7268");
 
-//   // Add interactive circles
-//   svg
-//     .selectAll("circle")
-//     .data(parsedData)
-//     .enter()
-//     .append("circle")
-//     .attr("cx", (d) => xScale(d.date))
-//     .attr("cy", (d) => yScale(d.cumulativeXp))
-//     .attr("r", 3)
-//     .attr("fill", "#fff")
-//     .on("mouseover", (event, d) => {
-//       tooltip.transition().duration(200).style("opacity", 1);
-//       tooltip
-//         .html(
-//           `
-//         ${new Date(d.createdAt).toLocaleString()}<br>
-//         XP: ${d.amount}<br>
-//         Total: ${d.cumulativeXp}
-//       `
-//         )
-//         .style("left", event.pageX + 10 + "px")
-//         .style("top", event.pageY - 28 + "px");
-//     })
-//     .on("mouseout", () => {
-//       tooltip.transition().duration(500).style("opacity", 0);
-//     });
+  // Create container group
+  const g = svg
+    .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
 
-//   // Remove axis elements
-//   svg
-//     .append("rect")
-//     .attr("width", width)
-//     .attr("height", height)
-//     .attr("fill", "none")
-//     .attr("pointer-events", "all");
-// };
+  // Add the line path
+  g.append("path")
+    .datum(cumulativeData)
+    .attr("class", "line")
+    .attr("d", line)
+    .style("fill", "none")
+    .style("stroke", "url(#lineGradient)")
+    .style("stroke-width", 2);
+
+  // Add dots
+  const dots = g
+    .selectAll(".dot")
+    .data(cumulativeData)
+    .enter()
+    .append("circle")
+    .attr("class", "dot")
+    .attr("cx", (d) => x(d.object.name))
+    .attr("cy", (d) => y(d.cumulativeXP))
+    .attr("r", 2.5)
+    .style("fill", "#fff");
+
+  // Add tooltip
+  const tooltip = d3
+    .select("body")
+    .append("div")
+    .style("position", "absolute")
+    .style("padding", "8px")
+    .style("background", "rgba(255, 255, 255, 0.1)")
+    .style("backdrop-filter", "blur(10px)")
+    .style("border-radius", "4px")
+    .style("color", "white")
+    .style("font-size", "12px")
+    .style("pointer-events", "none")
+    .style("opacity", 0);
+
+  // Add interactions
+  dots
+    .on("mouseover", (event, d) => {
+      d3.select(event.currentTarget).transition().duration(200).attr("r", 3.5);
+
+      tooltip.transition().duration(200).style("opacity", 1);
+      tooltip
+        .html(
+          `
+          <div class="font-bold">${d.object.name}</div>
+          <div>Project XP: +${formatNumber(d.amount)}</div>
+          <div>Total XP: ${formatNumber(d.cumulativeXP)}</div>
+          <div>Completed: ${new Date(d.createdAt).toLocaleDateString()}</div>
+          ${
+            d.object.attrs?.language
+              ? `<div>Language: ${d.object.attrs.language}</div>`
+              : ""
+          }
+        `
+        )
+        .style("left", `${event.pageX + 10}px`)
+        .style("top", `${event.pageY - 28}px`);
+    })
+    .on("mouseout", (event) => {
+      d3.select(event.currentTarget).transition().duration(200).attr("r", 2.5);
+
+      tooltip.transition().duration(500).style("opacity", 0);
+    });
+
+  // Add axes
+  const xAxis = d3.axisBottom(x);
+  const yAxis = d3.axisLeft(y).ticks(5).tickFormat(formatNumber2);
+
+  // Add x-axis
+  // g.append("g")
+  //   .attr("transform", `translate(0,${innerHeight})`)
+  //   .call(xAxis)
+  //   .selectAll("text")
+  //   .style("text-anchor", "end")
+  //   .attr("dx", "-.8em")
+  //   .attr("dy", ".15em")
+  //   .attr("transform", "rotate(-45)")
+  //   .style("fill", "#fff")
+  //   .style("font-size", "10px");
+
+  // Add y-axis
+  g.append("g")
+    .call(yAxis)
+    .selectAll("text")
+    .style("fill", "#fff")
+    .style("font-size", "10px");
+
+  // Style axes
+  g.selectAll(".domain").style("stroke", "rgba(255, 255, 255, 0.2)");
+
+  g.selectAll(".tick line").style("stroke", "rgba(255, 255, 255, 0.2)");
+};
 
 const renderProjectsMap = (projects) => {
   const container = document.getElementById("projects-map");
