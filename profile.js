@@ -99,7 +99,7 @@ const displayProfile = (data) => {
   const xp = data.xp.aggregate.sum.amount;
   const projects = data.projects;
 
-  console.log(projects);
+  // console.log(projects);
   // console.log(xp);
   // console.log({ user });
   // console.log(data.skills);
@@ -111,7 +111,13 @@ const displayProfile = (data) => {
   const coreStats = document.getElementById("coreStats");
 
   leftColumn.innerHTML = `<h1 class="text-3xl font-bold mb-2 text-white">${user.firstName} ${user.lastName}</h1>
-            <p class="text-purple-300">@${user.login} #${user.id}</p>`;
+            <p class="text-purple-300">@${user.login} #${user.id}</p>
+            <button id="logout-button" class="logout-btn">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+          </svg>
+          Logout
+        </button>`;
 
   midColumn.innerHTML = `
   <p class="text-white/80">
@@ -197,6 +203,14 @@ const displayProfile = (data) => {
 
   // createXpOverTimeGraph(data.transaction);
   renderProjectsMap(projects);
+
+  const logoutBtn = document.getElementById("logout-button");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("jwt");
+      window.location.href = "index.html";
+    });
+  }
 };
 
 // const createXpOverTimeGraph = (transactions) => {
@@ -328,10 +342,5 @@ const renderProjectsMap = (projects) => {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("logout-button").addEventListener("click", () => {
-    localStorage.removeItem("jwt");
-    window.location.href = "index.html";
-  });
+  fetchProfileData();
 });
-
-fetchProfileData();
