@@ -346,7 +346,6 @@ const createXpByProjectGraph = (progress) => {
           <div>Project XP: +${formatNumber(d.amount)}</div>
           <div>Total XP: ${formatNumber(d.cumulativeXP)}</div>
           <div>Completed: ${new Date(d.createdAt).toLocaleDateString()}</div>
-          <div>Type: ${d.object.type}</div>
         `
         )
         .style("left", `${event.pageX + 10}px`)
