@@ -14,36 +14,8 @@
 
     <link rel="stylesheet" href="styles.css" />
 
-    <style>
-      .waves {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: -1;
-      }
-
-      .blob {
-        position: fixed;
-        /* top: 0;
-        left: 0; */
-        width: 50%;
-        height: 100vh;
-        z-index: -1;
-      }
-
-      .card {
-        /* background: linear-gradient(
-          to right,
-          rgba(255, 255, 255, 0.2),
-          rgba(0, 0, 0, 0.4)
-        ); */
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 1rem;
-      }
-    </style>
+    <script src="profile.js" defer></script>
+    <script src="https://d3js.org/d3.v7.min.js" defer></script>
   </head>
   <body class="m-0 min-h-screen">
     <div>
@@ -121,7 +93,7 @@
     </div>
 
     <div class="container mx-auto px-4 py-16">
-      <!-- Enhanced Profile Header -->
+      <!-- Profile header -->
       <div class="text-center flex justify-center mb-14">
         <div
           class="w-full md:w-3/4 flex flex-wrap justify-around card p-6 space-y-4 md:space-y-0"
@@ -296,42 +268,11 @@
         </div>
       </div>
 
-      <!-- Projects Map -->
+      <!-- Completed Projects -->
       <div class="card p-6 mt-6">
         <h3 class="text-xl font-bold mb-4 text-white">Completed Projects</h3>
         <div id="projects-map" class="flex overflow-x-auto gap-4 pb-4"></div>
       </div>
     </div>
-
-    <script>
-      // Animate blob1 -> blob2 -> blob3 -> blob1 in a loop
-      const tween1 = KUTE.fromTo(
-        "#blob1",
-        { path: "#blob1" },
-        { path: "#blob2" },
-        { duration: 3000 }
-      );
-      const tween2 = KUTE.fromTo(
-        "#blob1",
-        { path: "#blob2" },
-        { path: "#blob3" },
-        { duration: 3000 }
-      );
-      const tween3 = KUTE.fromTo(
-        "#blob1",
-        { path: "#blob3" },
-        { path: "#blob1" },
-        { duration: 3000 }
-      );
-
-      tween1.chain(tween2);
-      tween2.chain(tween3);
-      tween3.chain(tween1);
-
-      tween1.start();
-    </script>
-
-    <script src="profile.js"></script>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
   </body>
 </html>
