@@ -33,6 +33,7 @@ const fetchProfileData = async () => {
         order_by: {createdAt: asc}
       ) {
         amount
+        createdAt
         object {
           name
           type
@@ -218,7 +219,7 @@ const displayProfile = (data) => {
 `;
 
   renderProjectsMap(projects);
-  createXpByProjectGraph(projects);
+  createXpByProjectGraph(data.progress);
 
   const logoutBtn = document.getElementById("logout-button");
   if (logoutBtn) {
@@ -229,20 +230,25 @@ const displayProfile = (data) => {
   }
 };
 
-const createXpByProjectGraph = (projects) => {
-  // Sort projects by creation date and calculate cumulative XP
-  const sortedProjects = [...projects].sort(
-    (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
-  );
-
+const createXpByProjectGraph = (progress) => {
   let cumulativeXP = 0;
-  const cumulativeData = sortedProjects.map((project) => {
-    cumulativeXP += project.amount;
+  const cumulativeData = progress.map((item) => {
+    cumulativeXP += item.amount;
     return {
-      ...project,
+      amount: item.amount,
       cumulativeXP,
+      createdAt: new Date(item.createdAt),
+      object: {
+        name: item.object.name,
+        type: item.object.type,
+      },
     };
   });
+
+  // Filter project transactions for dots only
+  const projectData = cumulativeData.filter((d) => d.object.type === "project");
+
+  console.log(projectData);
 
   const svg = d3.select("#xp-progress");
   svg.selectAll("*").remove();
@@ -256,8 +262,8 @@ const createXpByProjectGraph = (projects) => {
 
   // Create scales
   const x = d3
-    .scalePoint()
-    .domain(cumulativeData.map((d) => d.object.name))
+    .scaleTime()
+    .domain(d3.extent(cumulativeData, (d) => d.createdAt))
     .range([0, innerWidth]);
 
   const y = d3
@@ -268,9 +274,9 @@ const createXpByProjectGraph = (projects) => {
   // Create the line generator
   const line = d3
     .line()
-    .x((d) => x(d.object.name))
+    .x((d) => x(d.createdAt))
     .y((d) => y(d.cumulativeXP))
-    .curve(d3.curveMonotoneX);
+    .curve(d3.curveStepAfter);
 
   // Create gradient
   const gradient = svg
@@ -282,8 +288,8 @@ const createXpByProjectGraph = (projects) => {
     .attr("x2", "100%")
     .attr("y2", "0%");
 
-  gradient.append("stop").attr("offset", "0%").style("stop-color", "#c62368");
-  gradient.append("stop").attr("offset", "100%").style("stop-color", "#fa7268");
+  gradient.append("stop").attr("offset", "0%").style("stop-color", "#ff47b5");
+  gradient.append("stop").attr("offset", "100%").style("stop-color", "#ff8c64");
 
   // Create container group
   const g = svg
@@ -297,19 +303,21 @@ const createXpByProjectGraph = (projects) => {
     .attr("d", line)
     .style("fill", "none")
     .style("stroke", "url(#lineGradient)")
-    .style("stroke-width", 2);
+    .style("stroke-width", 2)
+    .style("filter", "drop-shadow(0px 0px 6px rgba(255, 71, 181, 0.8))");
 
   // Add dots
   const dots = g
     .selectAll(".dot")
-    .data(cumulativeData)
+    .data(projectData)
     .enter()
     .append("circle")
     .attr("class", "dot")
-    .attr("cx", (d) => x(d.object.name))
+    .attr("cx", (d) => x(new Date(d.createdAt)))
     .attr("cy", (d) => y(d.cumulativeXP))
-    .attr("r", 2.5)
-    .style("fill", "#fff");
+    .attr("r", 2)
+    .style("fill", "#fff")
+    .style("filter", "drop-shadow(0px 0px 2px rgba(255, 255, 255, 0.7))");
 
   // Add tooltip
   const tooltip = d3
@@ -328,7 +336,7 @@ const createXpByProjectGraph = (projects) => {
   // Add interactions
   dots
     .on("mouseover", (event, d) => {
-      d3.select(event.currentTarget).transition().duration(200).attr("r", 3.5);
+      d3.select(event.currentTarget).transition().duration(200).attr("r", 3);
 
       tooltip.transition().duration(200).style("opacity", 1);
       tooltip
@@ -338,37 +346,33 @@ const createXpByProjectGraph = (projects) => {
           <div>Project XP: +${formatNumber(d.amount)}</div>
           <div>Total XP: ${formatNumber(d.cumulativeXP)}</div>
           <div>Completed: ${new Date(d.createdAt).toLocaleDateString()}</div>
-          ${
-            d.object.attrs?.language
-              ? `<div>Language: ${d.object.attrs.language}</div>`
-              : ""
-          }
+          <div>Type: ${d.object.type}</div>
         `
         )
         .style("left", `${event.pageX + 10}px`)
         .style("top", `${event.pageY - 28}px`);
     })
     .on("mouseout", (event) => {
-      d3.select(event.currentTarget).transition().duration(200).attr("r", 2.5);
+      d3.select(event.currentTarget).transition().duration(200).attr("r", 2);
 
       tooltip.transition().duration(500).style("opacity", 0);
     });
 
   // Add axes
-  const xAxis = d3.axisBottom(x);
+  const xAxis = d3
+    .axisBottom(x)
+    .ticks(5)
+    .tickFormat((d) => d.toLocaleDateString());
   const yAxis = d3.axisLeft(y).ticks(5).tickFormat(formatNumber2);
 
   // Add x-axis
-  // g.append("g")
-  //   .attr("transform", `translate(0,${innerHeight})`)
-  //   .call(xAxis)
-  //   .selectAll("text")
-  //   .style("text-anchor", "end")
-  //   .attr("dx", "-.8em")
-  //   .attr("dy", ".15em")
-  //   .attr("transform", "rotate(-45)")
-  //   .style("fill", "#fff")
-  //   .style("font-size", "10px");
+  g.append("g")
+    .attr("transform", `translate(0,${innerHeight})`)
+    .call(xAxis)
+    .selectAll("text")
+    .style("text-anchor", "middle")
+    .style("fill", "#fff")
+    .style("font-size", "10px");
 
   // Add y-axis
   g.append("g")
