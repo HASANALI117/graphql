@@ -124,43 +124,17 @@
       </div>
 
       <!-- Stats Grid -->
-      <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <div class="grid md:grid-cols-3 gap-6 mb-8">
         <!-- XP & Grades Card -->
-        <div class="card p-6">
+        <div class="card p-6 md:col-span-1">
           <h2 class="text-2xl font-bold mb-4 text-white">Core Stats</h2>
-          <div class="grid grid-cols-3 gap-4" id="coreStats">
-            <div class="text-center">
-              <div class="text-3xl font-bold text-purple-300">2.8k</div>
-              <div class="text-sm text-white/80">Total XP</div>
-            </div>
-            <div class="text-center">
-              <div class="text-3xl font-bold text-green-400">A+</div>
-              <div class="text-sm text-white/80">Grade</div>
-            </div>
-            <div class="text-center">
-              <div class="text-3xl font-bold text-blue-400">98%</div>
-              <div class="text-sm text-white/80">Audit Ratio</div>
-            </div>
-          </div>
+          <div class="grid grid-cols-2 gap-4" id="coreStats"></div>
         </div>
 
         <!-- Skills Card -->
-        <div class="card p-6">
+        <div class="card p-6 md:col-span-2">
           <h2 class="text-2xl font-bold mb-4 text-white">Top Skills</h2>
-          <div class="flex flex-wrap gap-2" id="skills">
-            <span class="px-3 py-1 bg-purple-500/20 rounded-full text-white"
-              >JavaScript</span
-            >
-            <span class="px-3 py-1 bg-green-500/20 rounded-full text-white"
-              >Go</span
-            >
-            <span class="px-3 py-1 bg-blue-500/20 rounded-full text-white"
-              >Docker</span
-            >
-            <span class="px-3 py-1 bg-red-500/20 rounded-full text-white"
-              >React</span
-            >
-          </div>
+          <div class="flex flex-wrap gap-2" id="skills"></div>
         </div>
       </div>
 
@@ -172,32 +146,16 @@
           <svg viewBox="0 0 400 200" class="w-full">
             <!-- Audits Done -->
             <rect
-              x="50"
-              y="50"
-              width="250"
-              height="20"
-              rx="10"
-              fill="#2d2d2d"
-            />
-            <rect
               id="audit-ratio-done"
               x="50"
               y="50"
               width="225"
               height="20"
               rx="10"
-              fill="#4CAF50"
+              fill="#D17D98"
             />
 
             <!-- Audits Received -->
-            <rect
-              x="50"
-              y="100"
-              width="250"
-              height="20"
-              rx="10"
-              fill="#2d2d2d"
-            />
             <rect
               id="audit-ratio-received"
               x="50"
@@ -205,7 +163,7 @@
               width="75"
               height="20"
               rx="10"
-              fill="#f44336"
+              fill="#7D1C4A"
             />
 
             <text
@@ -228,15 +186,15 @@
             </text>
             <text
               id="audit-ratio-done-number"
-              x="360"
-              y="65"
+              x="280"
+              y="64"
               fill="#fff"
               font-size="12"
               text-anchor="end"
             ></text>
             <text
               id="audit-ratio-received-number"
-              x="360"
+              x="280"
               y="115"
               fill="#fff"
               font-size="12"

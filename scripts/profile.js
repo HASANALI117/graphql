@@ -115,11 +115,7 @@ const displayProfile = (data) => {
   const level = data.level[0].amount;
   const xp = data.xp.aggregate.sum.amount;
   const projects = data.projects;
-
-  // console.log(projects);
-  // console.log(xp);
-  // console.log({ user });
-  // console.log(data.skills);
+  const progress = data.progress;
 
   const leftColumn = document.getElementById("left-col");
   const midColumn = document.getElementById("mid-col");
@@ -153,12 +149,17 @@ const displayProfile = (data) => {
   </p>
   `;
 
+  const rank = getRank(level);
+
   rightColumn.innerHTML = `
-  <h1 class="text-4xl font-bold mb-2 self-center">
-    <div class="level-badge">
-      <span>Level ${level}</span>
-    </div>
-  </h1>
+  <div>
+    <h1 class="text-4xl font-bold mb-2">
+      <div class="level-badge">
+        <span>Level ${level}</span>
+      </div>
+    </h1>
+    <h2 class="text-white/80 text-lg font-bold">${rank}</h2>
+  </div>
 `;
 
   const skillElements = data.skills
@@ -207,11 +208,7 @@ const displayProfile = (data) => {
     <div class="text-sm text-white/80">Total XP</div>
   </div>
   <div class="text-center">
-    <div class="text-3xl font-bold text-green-400">A+</div>
-    <div class="text-sm text-white/80">Grade</div>
-  </div>
-  <div class="text-center">
-    <div class="text-3xl font-bold text-blue-400">${parseFloat(
+    <div class="text-3xl font-bold text-purple-400">${parseFloat(
       user.auditRatio
     ).toFixed(2)}</div>
     <div class="text-sm text-white/80">Audit Ratio</div>
@@ -219,7 +216,7 @@ const displayProfile = (data) => {
 `;
 
   renderProjectsMap(projects);
-  createXpByProjectGraph(data.progress);
+  createXpByProjectGraph(progress);
 
   const logoutBtn = document.getElementById("logout-button");
   if (logoutBtn) {
@@ -256,7 +253,7 @@ const createXpByProjectGraph = (progress) => {
   // Set up dimensions
   const width = 400;
   const height = 200;
-  const margin = { top: 20, right: 30, bottom: 30, left: 40 };
+  const margin = { top: 20, right: 10, bottom: 20, left: 10 };
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
 
@@ -365,20 +362,20 @@ const createXpByProjectGraph = (progress) => {
   const yAxis = d3.axisLeft(y).ticks(5).tickFormat(formatNumber2);
 
   // Add x-axis
-  g.append("g")
-    .attr("transform", `translate(0,${innerHeight})`)
-    .call(xAxis)
-    .selectAll("text")
-    .style("text-anchor", "middle")
-    .style("fill", "#fff")
-    .style("font-size", "10px");
+  // g.append("g")
+  //   .attr("transform", `translate(0,${innerHeight})`)
+  //   .call(xAxis)
+  //   .selectAll("text")
+  //   .style("text-anchor", "middle")
+  //   .style("fill", "#fff")
+  //   .style("font-size", "10px");
 
-  // Add y-axis
-  g.append("g")
-    .call(yAxis)
-    .selectAll("text")
-    .style("fill", "#fff")
-    .style("font-size", "10px");
+  // // Add y-axis
+  // g.append("g")
+  //   .call(yAxis)
+  //   .selectAll("text")
+  //   .style("fill", "#fff")
+  //   .style("font-size", "10px");
 
   // Style axes
   g.selectAll(".domain").style("stroke", "rgba(255, 255, 255, 0.2)");
@@ -413,6 +410,18 @@ const renderProjectsMap = (projects) => {
 document.addEventListener("DOMContentLoaded", () => {
   fetchProfileData();
 });
+
+// Function to determine the rank based on the level
+const getRank = (level) => {
+  if (level >= 60) return "Full-Stack Developer";
+  if (level >= 55) return "Confirmed Developer";
+  if (level >= 50) return "Junior Developer";
+  if (level >= 40) return "Basic Developer";
+  if (level >= 30) return "Assistant Developer";
+  if (level >= 20) return "Apprentice Developer";
+  if (level >= 10) return "Beginner Developer";
+  return "Aspiring Developer";
+};
 
 // Animate blob1 -> blob2 -> blob3 -> blob1 in a loop
 const tween1 = KUTE.fromTo(
