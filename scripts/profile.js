@@ -75,6 +75,29 @@ export const fetchProfileData = async () => {
             attrs
           }
       }
+      group(
+        where: {members: {userId: {_eq: 3289}}, _or: [{eventId: {_eq: 20}}, {event: {parentId: {_eq: 20}}}]}
+      ) {
+        id
+        status
+        captainLogin
+        captainId
+        object{
+          name
+        }
+        members {
+          id
+          userId
+          userLogin
+          userAuditRatio
+          accepted
+          user {
+            firstName
+            lastName
+          }
+        }
+        updatedAt
+      }
     }
   `;
 
@@ -89,7 +112,7 @@ export const fetchProfileData = async () => {
 
   if (response.ok) {
     const data = await response.json();
-    console.log(data.data);
+    // console.log(data.data);
     return data.data;
   } else {
     console.log("Failed to fetch profile data");
@@ -101,7 +124,7 @@ export const displayProfile = (data) => {
   renderSkills(data.skills);
   renderUserInfo(data.user[0], data.level[0].amount);
   renderCoreStats(data.user[0], data.xp.aggregate.sum.amount);
-  renderProjects(data.projects);
+  renderProjects(data.projects, data.group);
   renderAuditRatio(data.user[0]);
   renderXpChart(data.progress);
   handleLogout();

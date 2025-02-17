@@ -122,29 +122,154 @@ export const renderCoreStats = (user, xp) => {
   `;
 };
 
-export const renderProjects = (projects) => {
+export const renderProjects = (projects, groupData) => {
   document.getElementById(SELECTORS.PROJECTS_MAP).innerHTML = `
-  ${projects
-    .map(
-      (project) => `
-      <div class="flex-shrink-0 w-48 p-4 bg-white/10 rounded-lg text-center hover:bg-white/20 transition-all">
-        <h4 class="font-bold text-white mb-2">${project.object.name}</h4>
-        <div class="text-purple-300 text-sm">
-          +${formatNumber(project.amount)}
+    ${projects
+      .map(
+        (project) => `
+        <div 
+          class="flex-shrink-0 w-48 p-4 bg-white/10 rounded-lg text-center hover:bg-white/20 transition-all cursor-pointer project-card"
+          data-project='${JSON.stringify({ ...project, group: groupData })}'
+        >
+          <h4 class="font-bold text-white mb-2">${project.object.name}</h4>
+          <div class="text-purple-300 text-sm">
+            +${formatNumber(project.amount)}
+          </div>
+          <div class="text-xs text-white/60 mt-2">
+            ${new Date(project.createdAt).toLocaleDateString()}
+          </div>
+          <div class="mt-2">
+            <span class="px-2 py-1 bg-[#c62368] rounded-full text-xs text-white">
+              ${project.object.attrs.language}
+            </span>
+          </div>
         </div>
-        <div class="text-xs text-white/60 mt-2">
-          ${new Date(project.createdAt).toLocaleDateString()}
+      `
+      )
+      .join("")}
+  `;
+
+  // Add click handlers
+  document.querySelectorAll(".project-card").forEach((card) => {
+    card.addEventListener("click", () => {
+      const projectData = JSON.parse(card.dataset.project);
+      showProjectDetails(projectData);
+    });
+  });
+};
+
+const showProjectDetails = (project) => {
+  const modal = document.getElementById("project-modal");
+  const details = document.getElementById("project-details");
+
+  // Find group info if available
+  const groupInfo = project.group?.find((group) =>
+    group.object.name.includes(project.object.name)
+  );
+
+  details.innerHTML = `
+    <h2 class="text-2xl font-bold mb-6 text-white/90">${
+      project.object.name
+    }</h2>
+    
+    <div class="grid grid-cols-2 gap-8">
+      <!-- Left Column -->
+      <div class="space-y-6">
+        <div class="bg-white/5 rounded-md p-4 space-y-4">
+          <div>
+            <h3 class="text-white/60 text-sm mb-1">XP Earned</h3>
+            <p class="text-lg font-semibold text-purple-300">${formatNumber(
+              project.amount
+            )}</p>
+          </div>
+          <div>
+            <h3 class="text-white/60 text-sm mb-1">Completed On</h3>
+            <p class="text-lg text-white/90">${new Date(
+              project.createdAt
+            ).toLocaleDateString()}</p>
+          </div>
         </div>
-        <div class="mt-2">
-          <span class="px-2 py-1 bg-[#c62368] rounded-full text-xs text-white">
-            ${project.object.attrs.language}
-          </span>
+
+        <div class="bg-white/5 rounded-md p-4 space-y-4">
+          <h3 class="text-white/60 text-sm mb-2">Project Requirements</h3>
+          <div class="grid gap-3">
+            <div>
+              <span class="text-white/60 text-sm">Language:</span>
+              <span class="ml-2 text-white/90">${
+                project.object.attrs.language || "N/A"
+              }</span>
+            </div>
+            <div>
+              <span class="text-white/60 text-sm">Group Size:</span>
+              <span class="ml-2 text-white/90">${
+                project.object.attrs.groupMin
+              } - ${project.object.attrs.groupMax} members</span>
+            </div>
+            <div>
+              <span class="text-white/60 text-sm">Required Audit Ratio:</span>
+              <span class="ml-2 text-white/90">${
+                project.object.attrs.requiredAuditRatio
+              }</span>
+            </div>
+          </div>
         </div>
       </div>
-    `
-    )
-    .join("")}
+
+      <!-- Right Column -->
+      ${
+        groupInfo
+          ? `
+      <div class="bg-white/5 rounded-md p-4 space-y-4">
+        <div>
+          <h3 class="text-white/60 text-sm mb-1">Group Status</h3>
+          <p class="text-lg text-white/90">${groupInfo.status}</p>
+        </div>
+
+        <div class="space-y-3">
+          <h3 class="text-white/60 text-sm">Team Members</h3>
+          <div class="space-y-2">
+            ${groupInfo.members
+              .map(
+                (member) => `
+              <div class="flex items-center justify-between py-1">
+                <span class="text-white/90">${member.user.firstName} ${
+                  member.user.lastName
+                }</span>
+                ${
+                  member.userId === groupInfo.captainId
+                    ? `<span class="px-2 py-1 text-xs bg-[#c62368] rounded-full text-white">Captain</span>`
+                    : ""
+                }
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+        </div>
+      </div>
+      `
+          : ""
+      }
+    </div>
   `;
+
+  // Show modal
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+
+  // Add close handler
+  document.getElementById("close-modal").onclick = () => {
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  };
+
+  // Close on background click
+  modal.onclick = (e) => {
+    if (e.target === modal) {
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+  };
 };
 
 export const renderXpChart = (progress) => {

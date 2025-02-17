@@ -228,6 +228,38 @@
       </div>
     </div>
 
+    <!-- Project Details Modal -->
+    <div
+      id="project-modal"
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50"
+    >
+      <div class="card-2 max-w-2xl w-full mx-4 p-6 relative">
+        <!-- Close button -->
+        <button
+          id="close-modal"
+          class="absolute top-4 right-4 text-white/60 hover:text-white"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+
+        <!-- Modal content -->
+        <div id="project-details" class="text-white space-y-4">
+          <!-- Content will be populated dynamically -->
+        </div>
+      </div>
+    </div>
     <script type="module" src="scripts/app.js"></script>
   </body>
 </html>
