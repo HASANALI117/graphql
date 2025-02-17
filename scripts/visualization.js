@@ -343,7 +343,7 @@ export const renderXpChart = (progress) => {
   }));
 
   // Filter project transactions for dots only
-  const projectData = cumulativeData.filter((d) => d.object.type === "project");
+  // const projectData = cumulativeData.filter((d) => d.object.type === "project");
 
   const svg = d3.select("#xp-progress");
   svg.selectAll("*").remove();
@@ -404,7 +404,7 @@ export const renderXpChart = (progress) => {
   // Add dots
   const dots = g
     .selectAll(".dot")
-    .data(projectData)
+    .data(cumulativeData)
     .enter()
     .append("circle")
     .attr("class", "dot")
