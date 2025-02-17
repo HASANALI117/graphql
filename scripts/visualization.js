@@ -31,7 +31,7 @@ export const blobAnimation = () => {
 };
 
 export const renderUserInfo = (user, level) => {
-  const currentEvent = localStorage.getItem("currentEvent") || "20";
+  const currentEvent = window.currentEvent || "20";
 
   document.getElementById(SELECTORS.LEFT_COL).innerHTML = `
     <h1 class="text-3xl font-bold mb-2 text-white">${user.firstName} ${user.lastName}</h1>
@@ -64,7 +64,7 @@ export const renderUserInfo = (user, level) => {
 
   <div class="flex justify-center gap-4 mt-4">
     <button 
-      class="w-16 h-16 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer event-btn ${
+      class="w-16 h-16 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold transition-all cursor-pointer event-btn ${
         currentEvent === "20" ? "active" : ""
       }"
       data-event="20"
@@ -72,7 +72,7 @@ export const renderUserInfo = (user, level) => {
       Module
     </button>
     <button 
-      class="w-16 h-16 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer event-btn ${
+      class="w-16 h-16 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold transition-all cursor-pointer event-btn ${
         currentEvent === "37" ? "active" : ""
       }"
       data-event="37"
@@ -80,7 +80,7 @@ export const renderUserInfo = (user, level) => {
       GO
     </button>
     <button 
-      class="w-16 h-16 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer event-btn ${
+      class="w-16 h-16 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold transition-all cursor-pointer event-btn ${
         currentEvent === "311" ? "active" : ""
       }"
       data-event="311"
@@ -107,7 +107,7 @@ export const renderUserInfo = (user, level) => {
       const eventId = btn.dataset.event;
 
       // Store current event
-      localStorage.setItem("currentEvent", eventId.toString());
+      window.currentEvent = eventId;
 
       // Remove active class from all buttons
       document
