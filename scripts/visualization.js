@@ -254,18 +254,24 @@ const showProjectDetails = (project) => {
                 project.object.attrs.language || "N/A"
               }</span>
             </div>
-            <div>
+
+            ${
+              project.object.attrs.groupMin
+                ? `<div>
               <span class="text-white/60 text-sm">Group Size:</span>
-              <span class="ml-2 text-white/90">${
-                project.object.attrs.groupMin
-              } - ${project.object.attrs.groupMax} members</span>
-            </div>
-            <div>
+              <span class="ml-2 text-white/90">${project.object.attrs.groupMin} - ${project.object.attrs.groupMax} members</span>
+            </div>`
+                : ""
+            }
+            
+            ${
+              project.object.attrs.requiredAuditRatio
+                ? `<div>
               <span class="text-white/60 text-sm">Required Audit Ratio:</span>
-              <span class="ml-2 text-white/90">${
-                project.object.attrs.requiredAuditRatio
-              }</span>
-            </div>
+              <span class="ml-2 text-white/90">${project.object.attrs.requiredAuditRatio}</span>
+            </div>`
+                : ""
+            }
           </div>
         </div>
       </div>

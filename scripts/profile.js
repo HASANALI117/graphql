@@ -64,7 +64,7 @@ export const fetchProfileData = async (eventId = 20) => {
       projects: transaction(
           where: {
             type: {_eq: "xp"},
-            object: {type: {_eq: "project"}}
+            eventId:{_eq : ${eventId}}
           },
           order_by: {createdAt: asc}
         ) {
