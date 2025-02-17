@@ -1,5 +1,6 @@
 import { formatNumber, getRank } from "./utils.js";
 import { SELECTORS } from "./config.js";
+import { fetchProfileData, displayProfile } from "./profile.js";
 
 export const blobAnimation = () => {
   // Animate blob1 -> blob2 -> blob3 -> blob1 in a loop
@@ -30,6 +31,8 @@ export const blobAnimation = () => {
 };
 
 export const renderUserInfo = (user, level) => {
+  const currentEvent = localStorage.getItem("currentEvent") || "20";
+
   document.getElementById(SELECTORS.LEFT_COL).innerHTML = `
     <h1 class="text-3xl font-bold mb-2 text-white">${user.firstName} ${user.lastName}</h1>
     <p class="text-purple-300">@${user.login} #${user.id}</p>
@@ -42,20 +45,49 @@ export const renderUserInfo = (user, level) => {
   `;
 
   document.getElementById(SELECTORS.MID_COL).innerHTML = `
-  <p class="text-white/80">
-    <span class="font-bold">Cohort:</span> ${user.labels[0].labelName.replace(
-      "Cohort ",
-      ""
-    )}
-  </p>
-  <p class="text-white/80">
-    <span class="font-bold">Campus:</span> ${user.campus.toUpperCase()}
-  </p>
-  <p class="text-white/80">
-    <span class="font-bold">Member Since:</span> ${new Date(
-      user.createdAt
-    ).toLocaleDateString()}
-  </p>
+  <div class="mb-4">
+    <p class="text-white/80">
+      <span class="font-bold">Cohort:</span> ${user.labels[0].labelName.replace(
+        "Cohort ",
+        ""
+      )}
+    </p>
+    <p class="text-white/80">
+      <span class="font-bold">Campus:</span> ${user.campus.toUpperCase()}
+    </p>
+    <p class="text-white/80">
+      <span class="font-bold">Member Since:</span> ${new Date(
+        user.createdAt
+      ).toLocaleDateString()}
+    </p>
+  </div>
+
+  <div class="flex justify-center gap-4 mt-4">
+    <button 
+      class="w-16 h-16 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer event-btn ${
+        currentEvent === "20" ? "active" : ""
+      }"
+      data-event="20"
+    >
+      Module
+    </button>
+    <button 
+      class="w-16 h-16 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer event-btn ${
+        currentEvent === "37" ? "active" : ""
+      }"
+      data-event="37"
+    >
+      GO
+    </button>
+    <button 
+      class="w-16 h-16 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer event-btn ${
+        currentEvent === "311" ? "active" : ""
+      }"
+      data-event="311"
+    >
+      JS
+    </button>
+  </div>
   `;
 
   document.getElementById(SELECTORS.RIGHT_COL).innerHTML = `
@@ -68,6 +100,29 @@ export const renderUserInfo = (user, level) => {
     <h2 class="text-white/80 text-lg font-bold">${getRank(level)}</h2>
   </div>
   `;
+
+  // Add click handlers for event buttons
+  document.querySelectorAll(".event-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const eventId = btn.dataset.event;
+
+      // Store current event
+      localStorage.setItem("currentEvent", eventId.toString());
+
+      // Remove active class from all buttons
+      document
+        .querySelectorAll(".event-btn")
+        .forEach((b) => b.classList.remove("active"));
+      // Add active class to clicked button
+      btn.classList.add("active");
+
+      // Fetch and update data with new eventId
+      const newData = await fetchProfileData(eventId);
+      if (newData) {
+        displayProfile(newData);
+      }
+    });
+  });
 };
 
 export const renderSkills = (skills) => {

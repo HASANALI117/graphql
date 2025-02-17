@@ -31,42 +31,54 @@
   backdrop-filter: blur(5px);
 }
 
-/* Custom Scrollbar Styling */
-#projects-map::-webkit-scrollbar {
-  height: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-}
-
-#projects-map::-webkit-scrollbar-thumb {
-  background: #c62368;
-  border-radius: 4px;
+.logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  width: 40%;
+  background: rgba(255, 255, 255, 0.01);
+  color: #fff;
+  border-radius: 2rem;
+  backdrop-filter: blur(10px);
   transition: all 0.3s ease;
+  margin-top: 0.5rem;
 }
 
-#projects-map::-webkit-scrollbar-thumb:hover {
-  background: #d53867;
-  transform: scaleY(1.1);
+.logout-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
 }
 
-#projects-map::-webkit-scrollbar-track {
-  background: rgba(0, 18, 32, 0.4);
-  border-radius: 4px;
+.logout-btn svg {
+  transition: transform 0.3s ease;
 }
 
-/* Firefox Support */
-#projects-map {
-  scrollbar-color: #c62368 rgba(0, 18, 32, 0.4);
-  scrollbar-width: thin;
+.logout-btn:hover svg {
+  transform: translateX(2px);
 }
 
-#projects-map::-webkit-scrollbar-track-piece {
-  background: linear-gradient(
-    to right,
-    rgba(198, 35, 104, 0.1) 0%,
-    rgba(0, 18, 32, 0.4) 50%,
-    rgba(198, 35, 104, 0.1) 100%
-  );
+.event-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.event-btn.active {
+  background: rgba(198, 35, 104, 0.4);
+  box-shadow: 0 0 15px rgba(198, 35, 104, 0.4);
+}
+
+.event-btn.active::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #c62368, #fa7268);
+  border-radius: 50%;
+  z-index: -1;
+  animation: rotate 2s linear infinite;
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap");
@@ -173,29 +185,40 @@
   cursor: default;
 }
 
-.logout-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1.5rem;
-  width: 40%;
-  background: rgba(255, 255, 255, 0.01);
-  color: #fff;
-  border-radius: 2rem;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
-  margin-top: 0.5rem;
-}
-
-.logout-btn:hover {
+/* Custom Scrollbar Styling */
+#projects-map::-webkit-scrollbar {
+  height: 8px;
   background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-1px);
+  border-radius: 4px;
 }
 
-.logout-btn svg {
-  transition: transform 0.3s ease;
+#projects-map::-webkit-scrollbar-thumb {
+  background: #c62368;
+  border-radius: 4px;
+  transition: all 0.3s ease;
 }
 
-.logout-btn:hover svg {
-  transform: translateX(2px);
+#projects-map::-webkit-scrollbar-thumb:hover {
+  background: #d53867;
+  transform: scaleY(1.1);
+}
+
+#projects-map::-webkit-scrollbar-track {
+  background: rgba(0, 18, 32, 0.4);
+  border-radius: 4px;
+}
+
+/* Firefox Support */
+#projects-map {
+  scrollbar-color: #c62368 rgba(0, 18, 32, 0.4);
+  scrollbar-width: thin;
+}
+
+#projects-map::-webkit-scrollbar-track-piece {
+  background: linear-gradient(
+    to right,
+    rgba(198, 35, 104, 0.1) 0%,
+    rgba(0, 18, 32, 0.4) 50%,
+    rgba(198, 35, 104, 0.1) 100%
+  );
 }

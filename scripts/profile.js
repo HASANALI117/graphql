@@ -10,7 +10,7 @@ import {
 import { handleLogout } from "./auth.js";
 import { API } from "./config.js";
 
-export const fetchProfileData = async () => {
+export const fetchProfileData = async (eventId = 20) => {
   const query = `
     {
       user{
@@ -28,7 +28,7 @@ export const fetchProfileData = async () => {
             labelName
           }
       }
-      xp: transaction_aggregate(where: {type: {_eq: "xp"}, eventId: {_eq: 20}}) {
+      xp: transaction_aggregate(where: {type: {_eq: "xp"}, eventId: {_eq: ${eventId}}}) {
         aggregate {
           sum {
             amount
@@ -36,7 +36,7 @@ export const fetchProfileData = async () => {
         }
       }
       progress: transaction(
-        where: {type: {_eq: "xp"}, eventId: {_eq: 20}}
+        where: {type: {_eq: "xp"}, eventId: {_eq: ${eventId}}}
         order_by: {createdAt: asc}
       ) {
         amount
@@ -51,7 +51,7 @@ export const fetchProfileData = async () => {
       level: transaction(
         limit: 1
         order_by: {amount: desc}
-        where: {type: {_eq: "level"}}
+        where: {type: {_eq: "level"}, eventId: {_eq: ${eventId}}}
       ) {
         amount
       }
