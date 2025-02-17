@@ -9,8 +9,17 @@ import {
 
 import { handleLogout } from "./auth.js";
 import { API } from "./config.js";
+import { getUserIdFromJWT } from "./utils.js";
 
 export const fetchProfileData = async (eventId = 20) => {
+  const userId = getUserIdFromJWT();
+  if (!userId) {
+    console.error("No user ID found in JWT");
+    return null;
+  }
+
+  console.log(userId);
+
   const query = `
     {
       user{
@@ -76,7 +85,7 @@ export const fetchProfileData = async (eventId = 20) => {
           }
       }
       group(
-        where: {members: {userId: {_eq: 3289}}, _or: [{eventId: {_eq: 20}}, {event: {parentId: {_eq: 20}}}]}
+        where: {members: {userId: {_eq: ${userId}}}, _or: [{eventId: {_eq: 20}}, {event: {parentId: {_eq: 20}}}]}
       ) {
         id
         status

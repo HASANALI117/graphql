@@ -37,3 +37,18 @@ export const handleError = (response) => {
         "An unexpected error occurred. Please try again.";
   }
 };
+
+export const getUserIdFromJWT = () => {
+  const jwt = localStorage.getItem("jwt");
+  if (!jwt) return null;
+
+  try {
+    const payload = jwt.split(".")[1];
+    const decoded = atob(payload.replace(/-/g, "+").replace(/_/g, "/"));
+    const userId = JSON.parse(decoded).sub;
+    return userId;
+  } catch (error) {
+    console.error("Error decoding JWT:", error);
+    return null;
+  }
+};
