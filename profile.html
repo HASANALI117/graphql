@@ -10,7 +10,6 @@
 
     <link rel="stylesheet" href="styles/styles.css" />
 
-    <script src="scripts/profile.js" defer></script>
     <script src="https://d3js.org/d3.v7.min.js" defer></script>
   </head>
   <body class="m-0 min-h-screen">
@@ -128,7 +127,7 @@
         <!-- XP & Grades Card -->
         <div class="card p-6 md:col-span-1">
           <h2 class="text-2xl font-bold mb-4 text-white">Core Stats</h2>
-          <div class="grid grid-cols-2 gap-4" id="coreStats"></div>
+          <div class="grid grid-cols-2 gap-4" id="core-stats"></div>
         </div>
 
         <!-- Skills Card -->
@@ -228,5 +227,7 @@
         <div id="projects-map" class="flex overflow-x-auto gap-4 pb-4"></div>
       </div>
     </div>
+
+    <script type="module" src="scripts/app.js"></script>
   </body>
 </html>
